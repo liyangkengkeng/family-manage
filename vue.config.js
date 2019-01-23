@@ -6,4 +6,16 @@ module.exports = {
       .add('./src/main.ts')
       .end();
   },
+
+  lintOnSave:false,
+
+  devServer: {
+    proxy: {
+      '/family-manage/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        pathRewrite: { '/family-manage/api': '/api' }  
+      }
+    }
+  }
 };
