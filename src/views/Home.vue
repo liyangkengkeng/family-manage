@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    欢迎来到familyManage
     <HelloWorld />
   </div>
 </template>
@@ -15,14 +16,14 @@ import { User } from 'user';
   },
 })
 export default class Home extends Vue {
-  userInfo:User = {
-    name: 'HuRong',
-    password: 'rong',
-  }
-  mounted() {
-    this.$store.dispatch('userManage/GET_USERS_LIST', this.userInfo)
-      .then(res => {
-      });
-  }
+  // userInfo:User = {
+  //   name: 'HuRong',
+  //   password: 'rong',
+  // }
+  // mounted() {
+  //   this.$store.dispatch('userManage/GET_USERS_LIST', this.userInfo)
+  //     .then(res => {
+  //     });
+  // }
 }
 </script>
