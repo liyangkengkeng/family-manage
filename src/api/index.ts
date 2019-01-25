@@ -1,9 +1,9 @@
 import axios from "axios";
-const baseURL = process.env.VUE_APP_BASE_URL;
+const baseURL = process.env.BASE_URL;
 
 export const apiCreator = () => {
   return axios.create({
-    baseURL: `/${baseURL}/api`,
+    baseURL: `${baseURL}api`,
     timeout: 3000
   })
 }

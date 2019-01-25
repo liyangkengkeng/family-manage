@@ -1,9 +1,10 @@
 const modelUser = require('./server/schema.ts');
-const baseUrl = process.env.VUE_APP_BASE_URL;
 const URL = require("url"); //处理url的模块
+const baseUrl = 'familyManage';
 
 module.exports = {
   //修改入口文件，默认是main.js,现在改成main.ts
+  publicPath: baseUrl,
   chainWebpack: config => {
     config
       .entry('app')
@@ -23,9 +24,7 @@ module.exports = {
     // },  //后面的api加上了baseUrl，并且现在都在localhost:8080下面，所以可以不用代理
     port: 8080,
     historyApiFallback: {
-      rewrites: [
-         {from: /./, to: '/404.html'}
-      ]    
+      index: '/familyManage/',   
     },
     //open: true, //打开浏览器
     before(app, server) { //多看看webpack 的 DevServer选项配置
