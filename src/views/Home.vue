@@ -7,6 +7,7 @@
 <script lang="ts">
 import { Component, Vue, Prop} from 'vue-property-decorator';
 import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
+import { User } from 'user';
 
 @Component({
   components: {
@@ -14,10 +15,13 @@ import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
   },
 })
 export default class Home extends Vue {
+  userInfo:User = {
+    name: 'HuRong',
+    password: 'rong',
+  }
   mounted() {
-    this.$store.dispatch('GET_USERS_LIST', {name: 'HuRong'})
+    this.$store.dispatch('userManage/GET_USERS_LIST', this.userInfo)
       .then(res => {
-        console.log(res)
       });
   }
 }
