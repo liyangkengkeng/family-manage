@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    欢迎来到familyManage
+    欢迎来到familyManage!
     <HelloWorld />
   </div>
 </template>
