@@ -7,5 +7,9 @@ export default {
 
   saveUsers (params:any){
     return apiCreator().get('/users/save', {params: params})
-  }  
+  },
+
+  logout (params:any){
+    return apiCreator().get('/users/logout', {params: params})
+  },
 }

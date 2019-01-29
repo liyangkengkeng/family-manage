@@ -1,29 +1,26 @@
 <template>
   <div class="home">
     欢迎来到familyManage
-    <HelloWorld />
+    <button class="btn btn-lg light-blue" @click="logout">注销</button>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop} from 'vue-property-decorator';
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
 import { User } from 'user';
 
 @Component({
   components: {
-    HelloWorld,
   },
 })
 export default class Home extends Vue {
-  // userInfo:User = {
-  //   name: 'HuRong',
-  //   password: 'rong',
-  // }
-  // mounted() {
-  //   this.$store.dispatch('userManage/GET_USERS_LIST', this.userInfo)
-  //     .then(res => {
-  //     });
-  // }
+  logout() {
+    this.$store.dispatch('userManage/LOGOUT_USER')
+    .then(({data}) => {
+      if (data.code === 0) {
+        this.$router.push('/login')
+      }
+    }) 
+  }
 }
 </script>

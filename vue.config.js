@@ -1,6 +1,21 @@
-const modelUser = require('./server/schema.ts');
-const URL = require("url"); //处理url的模块
+const UsersModel = require('./server/schema.ts');
+const URL = require('url'); //处理url的模块
 const baseUrl = 'familyManage';
+const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session); //可以把session存放在mongodb数据库
+const mongodb = require('./server/constant/index.ts');
+const uri = mongodb.mongodbUrl;
+const collection = mongodb.sessionCollection;
+const databaseName = mongodb.databaseName;
+const mongoStore = new MongoDBStore({
+  uri, //mongoDB connection string
+  databaseName, //the MongoDB database to store sessions in
+  collection, //the MongoDB collection to store sessions in
+});
+
+mongoStore.on('error', error => {
+  console.log(error);
+});
 
 module.exports = {
   //修改入口文件，默认是main.js,现在改成main.ts
@@ -12,29 +27,57 @@ module.exports = {
       .end();
   },
 
-  lintOnSave:false,
+  lintOnSave: false,
 
   devServer: {
     // proxy: {
     //   '/family-manage/api': {
     //     target: 'http://localhost:8080',
     //     changeOrigin: true,
-    //     pathRewrite: { '/family-manage/api': '/api' }  
+    //     pathRewrite: { '/family-manage/api': '/api' }
     //   }
     // },  //后面的api加上了baseUrl，并且现在都在localhost:8080下面，所以可以不用代理
     port: 8080,
     historyApiFallback: {
-      index: '/familyManage/',   
+      index: '/familyManage/',
     },
     //open: true, //打开浏览器
-    before(app, server) { //多看看webpack 的 DevServer选项配置
+    before(app, server) {
+      //多看看webpack 的 DevServer选项配置
+      app.use(
+        session({
+          // 把session保存到数据库里面
+          secret: 'family-manage', //加密字符串，随意写
+          cookie: {
+            maxAge: 1000 * 60 * 10, //设置有效时间10分钟
+          },
+          store: mongoStore,
+          resave: true,
+          saveUninitialized: true,
+          rolling: true, //在每次请求时强行设置 cookie，这将重置cookie 过期时间（默认：false）
+          //建议设置true ,设置过期时间如果是2分钟，如果在2分钟内一直操作（访问）浏览器页面，
+          //最后一个访问结束后的2分钟在让过期
+        })
+      );
       app.get(`/${baseUrl}/api/users/find`, (req, res) => {
         let userInfo = URL.parse(req.url, true).query || {};
-        modelUser.find(userInfo, (err, doc) => { 
-          if (err) console.log(err);
-          else if (doc) res.send(JSON.stringify(doc));
+        UsersModel.find(userInfo, (err, doc) => {
+          if (err) {
+            console.log(err);
+          } else if (doc) {
+            if((doc || []).length > 0) {
+              req.session.user = doc[0].name;
+            }
+            res.send(doc);
+          }
         });
-      });      
-    }
-  }
+      });
+
+      //退出登录的时候，需要清除session
+      app.get(`/${baseUrl}/api/users/logout`, (req, res) => {
+        req.session.user = null;
+        res.json({ code: 0 });
+      });
+    },
+  },
 };
