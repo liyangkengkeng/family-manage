@@ -1,12 +1,11 @@
-const UsersModel = require('./server/schema.ts');
-const URL = require('url'); //处理url的模块
-const baseUrl = 'familyManage';
+const { registerApi } = require('./server/apis/user.ts');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session); //可以把session存放在mongodb数据库
 const mongodb = require('./server/constant/index.ts');
 const uri = mongodb.mongodbUrl;
 const collection = mongodb.sessionCollection;
 const databaseName = mongodb.databaseName;
+const api = require('./server/apis/user.ts');
 const mongoStore = new MongoDBStore({
   uri, //mongoDB connection string
   databaseName, //the MongoDB database to store sessions in
@@ -19,7 +18,7 @@ mongoStore.on('error', error => {
 
 module.exports = {
   //修改入口文件，默认是main.js,现在改成main.ts
-  publicPath: baseUrl,
+  publicPath: 'familyManage',
   chainWebpack: config => {
     config
       .entry('app')
@@ -30,13 +29,13 @@ module.exports = {
   lintOnSave: false,
 
   devServer: {
-    // proxy: {
-    //   '/family-manage/api': {
-    //     target: 'http://localhost:8080',
-    //     changeOrigin: true,
-    //     pathRewrite: { '/family-manage/api': '/api' }
-    //   }
-    // },  //后面的api加上了baseUrl，并且现在都在localhost:8080下面，所以可以不用代理
+    proxy: {
+      '/familyManage/api': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        pathRewrite: { '/familyManage/api': '/api' }
+      }
+    },  //后面的api加上了baseUrl，并且现在都在localhost:8080下面，所以可以不用代理
     port: 8080,
     historyApiFallback: {
       index: '/familyManage/',
@@ -59,25 +58,7 @@ module.exports = {
           //最后一个访问结束后的2分钟在让过期
         })
       );
-      app.get(`/${baseUrl}/api/users/find`, (req, res) => {
-        let userInfo = URL.parse(req.url, true).query || {};
-        UsersModel.find(userInfo, (err, doc) => {
-          if (err) {
-            console.log(err);
-          } else if (doc) {
-            if((doc || []).length > 0) {
-              req.session.user = doc[0].name;
-            }
-            res.send(doc);
-          }
-        });
-      });
-
-      //退出登录的时候，需要清除session
-      app.get(`/${baseUrl}/api/users/logout`, (req, res) => {
-        req.session.user = null;
-        res.json({ code: 0 });
-      });
+      registerApi(app); //把后端接口单独封装了     
     },
   },
 };

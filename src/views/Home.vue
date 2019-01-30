@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     欢迎来到familyManage!
-    <HelloWorld />
+    <button class="btn btn-lg light-blue" @click="logout">注销</button>
   </div>
 </template>
 
