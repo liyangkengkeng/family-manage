@@ -1,6 +1,8 @@
+const mongodb = require ("./constant/index.ts");
+
 const mongoose = require("mongoose");
 //本地users数据库
-const mongoURL = "mongodb://localhost:27017/familyManage";
+const mongoURL = mongodb.mongoURL;
 //连接users数据库
 mongoose.connect(mongoURL)
 
@@ -24,14 +26,7 @@ const usersSchema = new Schema({
   description: String,
 });
 
-const UsersModel = mongoose.model("users", usersSchema);
 
-// let liyang = new UsersModel({
-//   name: "LiYang",
-//   password: "LiYang",
-//   description: "dad"
-// });
+const UsersModel = mongoose.model(mongodb.collection, usersSchema);
 
-// liyang.save();
-
- module.exports = UsersModel;
+ module.exports = UsersModel
