@@ -8,5 +8,8 @@ export default {
   },
   'LOGOUT_USER':({ commit, state }: ActionContext<any,any>, params:User) => {
     return $http.logout(params);
+  },
+  'REGISTER_USER':({ commit, state }: ActionContext<any,any>, params:User) => {
+    return $http.register(params);
   }
 }

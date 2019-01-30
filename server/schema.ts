@@ -26,7 +26,4 @@ const usersSchema = new Schema({
   description: String,
 });
 
-
-const UsersModel = mongoose.model(mongodb.collection, usersSchema);
-
- module.exports = UsersModel
+module.exports = mongoose.model(mongodb.collection, usersSchema)

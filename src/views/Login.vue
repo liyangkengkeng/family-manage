@@ -13,7 +13,8 @@
           <div>
             <input type="checkbox"> 记住密码
           </div>
-          <button class="btn btn-lg light-blue" @click="login">Login</button>
+          <button class="btn btn-lg light-blue mr-10" @click="login">Login</button>
+          <button class="btn btn-lg light-blue" @click="register">register</button>
         </div>
       </article>
     </div>
@@ -54,6 +55,10 @@ export default class Login extends Vue {
       }
       this.$router.push('/home')
     });  
+  }
+
+  register() {
+   this.$router.push('/register')
   }
 }
 </script>
