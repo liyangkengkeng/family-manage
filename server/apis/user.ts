@@ -1,5 +1,3 @@
-// const UsersModel = require('../schema/userSchema.ts');
-// const SessionModel = require('../schema/sessionSchema.ts');
 const Model = require('../schema.ts')
 const URLUtil = require('url'); //处理url的模块
 
