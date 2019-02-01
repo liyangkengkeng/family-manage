@@ -30,6 +30,10 @@ app.use(
     //最后一个访问结束后的2分钟在让过期
   })
 );
+app.use((req,res,next) => {
+  console.log(req.session)
+  next()
+});
 app.use('/', router);
 
 registerApi(router)

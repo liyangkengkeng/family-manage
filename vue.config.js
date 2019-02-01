@@ -1,4 +1,5 @@
-const { registerApi } = require('./server/apis/user.ts');
+const User = require('./server/apis/user.ts');
+const Activity = require('./server/apis/activity.ts');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session); //可以把session存放在mongodb数据库
 const mongodb = require('./server/constant/index.ts');
@@ -56,8 +57,9 @@ module.exports = {
           //建议设置true ,设置过期时间如果是2分钟，如果在2分钟内一直操作（访问）浏览器页面，
           //最后一个访问结束后的2分钟在让过期
         })
-      );
-      registerApi(app); //把后端接口单独封装了     
+      );     
+      User.registerApi(app); //把后端接口单独封装了
+      Activity.registerApi(app);     
     },
   },
 };

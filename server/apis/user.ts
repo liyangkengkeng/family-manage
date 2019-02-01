@@ -1,8 +1,6 @@
 const Model = require('../schema.ts')
 const URLUtil = require('url'); //处理url的模块
 
-console.log(Model)
-
 module.exports = {
   registerApi: app => {
     app.get('/api/users/find', (req, res) => {
@@ -21,20 +19,9 @@ module.exports = {
       });
     });
 
-    app.get('/api/users/isLogin', (req,res) => {
-      Model.SessionModel.find({}, (err, doc) => {
-        if (err) {
-          res.json({ code: -1, message: 'error' });
-        } else if (doc) {
-          console.log('11', JSON.stringify(doc) )
-          res.json({ code: 0, message: 'success' });
-        }
-      });      
-    });
-
     //退出登录的时候，需要清除session
     app.get('/api/users/logout', (req, res) => {
-      req.session.user = null;
+      req.session.destroy();
       res.json({ code: 0 });
     });
     //注册

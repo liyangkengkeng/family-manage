@@ -1,7 +1,10 @@
 <template>
   <div class="home">
     欢迎{{ name }}来到familyManage!
-    <button class="btn btn-lg light-blue" @click="logout">注销</button>
+    <div>
+      <button class="btn btn-lg light-blue mr-10 " @click="logout">注销</button>
+      <button class="btn btn-lg light-blue" @click="gotoActivity">活动管理</button>
+    </div>
   </div>
 </template>
 
@@ -16,6 +19,10 @@ import { User } from 'user';
 export default class Home extends Vue {
   get name(): string {
     return '';
+  }
+
+  gotoActivity() {
+    this.$router.push('/activity');
   }
 
   logout() {

@@ -13,8 +13,4 @@ export default {
   logout (params:any){
     return apiCreator().get('/users/logout', {params: params})
   },
-
-  isLogin() {
-    return apiCreator().get('/users/isLogin')
-  }
 }
