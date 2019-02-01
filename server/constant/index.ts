@@ -1,6 +1,6 @@
 const mongodbData = {
   mongoURL: 'mongodb://localhost:27017/familyManage',
-  collection: 'users',
+  userCollection: 'users',
   databaseName: 'familyManage',
   sessionCollection: 'mySessions',
 }

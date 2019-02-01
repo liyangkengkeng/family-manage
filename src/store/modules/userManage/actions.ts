@@ -11,5 +11,8 @@ export default {
   },
   'REGISTER_USER':({ commit, state }: ActionContext<any,any>, params:User) => {
     return $http.register(params);
+  },
+  'IS_LOGIN':({ commit, state }: ActionContext<any,any>) => {
+    return $http.isLogin();
   }
 }

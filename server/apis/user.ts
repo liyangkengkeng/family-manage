@@ -1,20 +1,37 @@
-const UsersModel = require('../schema.ts');
+// const UsersModel = require('../schema/userSchema.ts');
+// const SessionModel = require('../schema/sessionSchema.ts');
+const Model = require('../schema.ts')
 const URLUtil = require('url'); //处理url的模块
+
+console.log(Model)
 
 module.exports = {
   registerApi: app => {
     app.get('/api/users/find', (req, res) => {
       let userInfo = URLUtil.parse(req.url, true).query || {};
-      UsersModel.find(userInfo, (err, doc) => {
+      Model.UsersModel.find(userInfo, (err, doc) => {
         if (err) {
-          console.log(err);
+          res.json({ code: -1, message: '登录失败' });
         } else if (doc) {
           if ((doc || []).length > 0) {
             req.session.user = doc[0].name;
+            res.json({ code: 0, message: '登录成功', userList: doc });
+            return;
           }
-          res.send(doc);
+          res.json({ code: -2, message: '此账号不存在' });
         }
       });
+    });
+
+    app.get('/api/users/isLogin', (req,res) => {
+      Model.SessionModel.find({}, (err, doc) => {
+        if (err) {
+          res.json({ code: -1, message: 'error' });
+        } else if (doc) {
+          console.log('11', JSON.stringify(doc) )
+          res.json({ code: 0, message: 'success' });
+        }
+      });      
     });
 
     //退出登录的时候，需要清除session
@@ -22,7 +39,6 @@ module.exports = {
       req.session.user = null;
       res.json({ code: 0 });
     });
-
     //注册
     app.post('/api/users/register', (req, res) => {
       let data = '';  //心累，找了很久，axios.post发出来的请求，express这边获取参数的方法，
@@ -32,7 +48,7 @@ module.exports = {
       req.on('end', () => {
         let userInfo = JSON.parse(data);
         //先用账号查询，如果存在账号，则告诉已经注册，不存在则注册
-        UsersModel.find({ name: userInfo.name }, (err, doc) => {
+        Model.UsersModel.find({ name: userInfo.name }, (err, doc) => {
           if (err) {
             console.log(err);
           } else if (doc) {
@@ -41,7 +57,7 @@ module.exports = {
               res.json({ code: -1, message: '账号存在' });
             } else {
               //注册，保存到数据库
-              UsersModel.create(userInfo, (err, doc) => {
+              Model.UsersModel.create(userInfo, (err, doc) => {
                 if (err) {
                   console.log(err);
                   res.json({ code: -1, message: '注册失败' });

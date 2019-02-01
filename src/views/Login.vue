@@ -49,7 +49,7 @@ export default class Login extends Vue {
     }
     this.$store.dispatch('userManage/GET_USERS_LIST', this.userInfo)
     .then(({data}) => {
-      if((data || []).length === 0) {
+      if(data.code !== 0) {
         alert('密码或账户错误')
         return;
       }

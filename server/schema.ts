@@ -19,6 +19,11 @@ db.once('open', () => {
 
 //定义Schema(每个schema会映射到mongodb中的一个collection)
 const Schema = mongoose.Schema;
+// const createSchema = (collection, schema) => {
+//   return mongoose.model(collection, new Schema(schema));
+// }
+
+// module.exports = createSchema;
 
 const usersSchema = new Schema({
   name: String,
@@ -26,4 +31,12 @@ const usersSchema = new Schema({
   description: String,
 });
 
-module.exports = mongoose.model(mongodb.collection, usersSchema)
+const sessionSchema = new Schema({
+   expires: String,
+   session: Object,  
+})
+
+module.exports = {
+  UsersModel: mongoose.model(mongodb.userCollection, usersSchema),
+  SessionModel: mongoose.model(mongodb.sessionCollection, sessionSchema),
+}

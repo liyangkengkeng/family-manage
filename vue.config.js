@@ -5,7 +5,6 @@ const mongodb = require('./server/constant/index.ts');
 const uri = mongodb.mongodbUrl;
 const collection = mongodb.sessionCollection;
 const databaseName = mongodb.databaseName;
-const api = require('./server/apis/user.ts');
 const mongoStore = new MongoDBStore({
   uri, //mongoDB connection string
   databaseName, //the MongoDB database to store sessions in
@@ -51,8 +50,8 @@ module.exports = {
             maxAge: 1000 * 60 * 10, //设置有效时间10分钟
           },
           store: mongoStore,
-          resave: true,
-          saveUninitialized: true,
+          resave: false,
+          saveUninitialized: false,
           rolling: true, //在每次请求时强行设置 cookie，这将重置cookie 过期时间（默认：false）
           //建议设置true ,设置过期时间如果是2分钟，如果在2分钟内一直操作（访问）浏览器页面，
           //最后一个访问结束后的2分钟在让过期
