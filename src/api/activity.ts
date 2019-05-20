@@ -5,7 +5,7 @@ export default {
   addActivity(params:any){
     return apiCreator().post('/activity/add', params)
   },
-  getList(params:any) {
-    return apiCreator().get('/activity/getList', {params: params})
+  getList() {
+    return apiCreator().get('/activity/getList')
   }
 }

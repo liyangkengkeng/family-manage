@@ -1,5 +1,3 @@
-const User = require('./server/apis/user.ts');
-const Activity = require('./server/apis/activity.ts');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session); //可以把session存放在mongodb数据库
 const mongodb = require('./server/constant/index.ts');
@@ -11,6 +9,7 @@ const mongoStore = new MongoDBStore({
   databaseName, //the MongoDB database to store sessions in
   collection, //the MongoDB collection to store sessions in
 });
+const routerBase = 'familyManage';
 
 mongoStore.on('error', error => {
   console.log(error);
@@ -18,7 +17,7 @@ mongoStore.on('error', error => {
 
 module.exports = {
   //修改入口文件，默认是main.js,现在改成main.ts
-  publicPath: 'familyManage',
+  publicPath: routerBase,
   chainWebpack: config => {
     config
       .entry('app')
@@ -31,11 +30,11 @@ module.exports = {
   devServer: {
     proxy: {
       '/familyManage/api': {
-        target: 'http://localhost:8080',
+        target: 'http://localhost:3000',
         changeOrigin: true,
         pathRewrite: { '/familyManage/api': '/api' }
       }
-    },  //后面的api加上了baseUrl，并且现在都在localhost:8080下面，所以可以不用代理
+    },
     port: 8080,
     historyApiFallback: {
       index: '/familyManage/',
@@ -57,9 +56,7 @@ module.exports = {
           //建议设置true ,设置过期时间如果是2分钟，如果在2分钟内一直操作（访问）浏览器页面，
           //最后一个访问结束后的2分钟在让过期
         })
-      );     
-      User.registerApi(app); //把后端接口单独封装了
-      Activity.registerApi(app);     
+      ); 
     },
   },
 };

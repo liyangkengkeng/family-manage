@@ -4,10 +4,10 @@
     <div>
       <div>
         <div class="form-group">
-          <label>活动名称</label><input type="text" class="form-control" v-model="activityName">
+          <label class="mr-10">活动名称</label><input type="text" class="form-control" v-model="activityName">
         </div>
         <div class="form-group">
-          <label>活动描述</label>
+          <label class="mr-10">活动描述</label>
           <textarea class="form-control" v-model="activityDesc" />
         </div>
       </div>
@@ -56,12 +56,11 @@ export default class ActivityPage extends Vue {
   getActivityList() {
     this.$store.dispatch('activityManage/GET_LIST')
       .then(({ data }) => {
-        if (data.code !== 0) {
-          alert(data.message || '查询失败');
-          return;
-        }
         this.activityList = data.activityList || [];
-      });
+      })
+      .catch(({data}) => {
+        alert(data.message);
+      }) 
   }
   addActivity() {
     if (!this.activityName) {
@@ -70,13 +69,12 @@ export default class ActivityPage extends Vue {
     }
     this.$store.dispatch('activityManage/ADD', this.activityObj)
       .then(({ data }) => {
-        if (data.code !== 0) {
-          alert(data.message || '添加失败');
-          return;
-        }
         this.initData();
         this.getActivityList();
-      });
+      })
+      .catch(({data}) => {
+        alert(data.message);
+      }) 
   }
 }
 </script>

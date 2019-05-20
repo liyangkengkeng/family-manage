@@ -12,4 +12,15 @@ export default {
   'REGISTER_USER':({ commit, state }: ActionContext<any,any>, params:User) => {
     return $http.register(params);
   },
+  'GET_PUBLIC_KEY':({ commit, state }: ActionContext<any,any>, params:User) => {
+    return $http.getPublicKey()
+      .then(({data}) => {
+        commit('SET_PUBLIC_KEY', data.publicKey || '');
+        return data.publicKey || '';
+      })
+      .catch(e => {
+        commit('SET_PUBLIC_KEY', '');
+        return '';
+      })
+  },
 }

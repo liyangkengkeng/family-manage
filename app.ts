@@ -12,8 +12,6 @@ const mongoStore = new MongoDBStore({
 });
 
 const app = express();
-const router = express.Router();
-const { registerApi } = require('./server/apis/user.ts');
 
 app.use(
   session({
@@ -31,11 +29,11 @@ app.use(
   })
 );
 app.use((req,res,next) => {
-  console.log(req.session)
   next()
 });
-app.use('/', router);
 
-registerApi(router)
+require('./server/apis/user.ts').registerApi(app);
+require('./server/apis/rsa.ts').registerApi(app);
+require('./server/apis/activity.ts').registerApi(app);
 
 app.listen(3000, () => console.log('app listening on port 3000'));

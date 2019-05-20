@@ -18,9 +18,15 @@ export const apiCreator = () => {
 
   instance.interceptors.response.use(
     (response: any): any => {
+      let code = ((response || {}).data || {}).code;
+      if(code !== 0) {
+        return Promise.reject(response);
+      }
       return response;
     },
-    error => {}
+    (errorData: any): any => {
+      return Promise.reject(errorData || {});
+    }
   );
   return instance;
 };

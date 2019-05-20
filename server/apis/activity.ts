@@ -1,4 +1,4 @@
-const Model = require('../schema.ts')
+const { ActivityModel } = require('../schema.ts')
 
 module.exports = {
   registerApi: app => {
@@ -11,7 +11,7 @@ module.exports = {
       req.on('end', () => {
         let activityInfo = JSON.parse(data);
         //如果存在活动名称，则告诉已经存在这个名称
-        Model.ActivityModel.find({ activityName: activityInfo.activityName }, (err, doc) => {
+        ActivityModel.find({ activityName: activityInfo.activityName }, (err, doc) => {
           if (err) {
             console.log(err);
           } else if (doc) {
@@ -20,7 +20,7 @@ module.exports = {
               res.json({ code: -1, message: '活动名称已经存在，请换一个' });
             } else {
               //注册，保存到数据库
-              Model.ActivityModel.create(activityInfo, (err, doc) => {
+              ActivityModel.create(activityInfo, (err, doc) => {
                 if (err) {
                   console.log(err);
                   res.json({ code: -1, message: '新增失败' });
@@ -35,7 +35,7 @@ module.exports = {
 
     //查询活动
     app.get('/api/activity/getList', (req, res) => {
-      Model.ActivityModel.find({}, (err, doc) => {
+      ActivityModel.find({}, (err, doc) => {
         if (err) {
           res.json({ code: -1, message: '查询失败' });
         } else if (doc) {

@@ -1,20 +1,24 @@
-const Model = require('../schema.ts')
+const { UsersModel } = require('../schema.ts')
 const URLUtil = require('url'); //处理url的模块
+const { decrypt } = require('../rsa/index.ts');
 
 module.exports = {
   registerApi: app => {
     app.get('/api/users/find', (req, res) => {
-      let userInfo = URLUtil.parse(req.url, true).query || {};
-      Model.UsersModel.find(userInfo, (err, doc) => {
+      const userInfo = URLUtil.parse(req.url, true).query || {};
+      const originPassword = decrypt(userInfo.password);
+      userInfo.password = originPassword;
+      UsersModel.find(userInfo, (err, doc) => {
         if (err) {
           res.json({ code: -1, message: '登录失败' });
         } else if (doc) {
           if ((doc || []).length > 0) {
             req.session.user = doc[0].name;
-            res.json({ code: 0, message: '登录成功', userList: doc });
+            //res.json({ code: 0, message: '登录成功', userList: doc });
+            res.json({ code: 0, message: '登录成功'});
             return;
           }
-          res.json({ code: -2, message: '此账号不存在' });
+          res.json({ code: -2, message: '账号或密码错误' });
         }
       });
     });
@@ -33,7 +37,7 @@ module.exports = {
       req.on('end', () => {
         let userInfo = JSON.parse(data);
         //先用账号查询，如果存在账号，则告诉已经注册，不存在则注册
-        Model.UsersModel.find({ name: userInfo.name }, (err, doc) => {
+        UsersModel.find({ name: userInfo.name }, (err, doc) => {
           if (err) {
             console.log(err);
           } else if (doc) {
@@ -42,7 +46,9 @@ module.exports = {
               res.json({ code: -1, message: '账号存在' });
             } else {
               //注册，保存到数据库
-              Model.UsersModel.create(userInfo, (err, doc) => {
+              const originPassword = decrypt(userInfo.password);
+              userInfo.password = originPassword;
+              UsersModel.create(userInfo, (err, doc) => {
                 if (err) {
                   console.log(err);
                   res.json({ code: -1, message: '注册失败' });
@@ -53,8 +59,6 @@ module.exports = {
           }
         });        
       })
-      
-
     });    
   },
 };
