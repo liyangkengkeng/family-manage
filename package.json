@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "start": "node app.ts"
+    "start": "node --inspect app.ts"
   },
   "dependencies": {
     "axios": "^0.18.0",

@@ -28,12 +28,10 @@ app.use(
     //最后一个访问结束后的2分钟在让过期
   })
 );
-app.use((req,res,next) => {
-  next()
-});
 
-require('./server/apis/user.ts').registerApi(app);
+app.use('/users', require('./server/apis/user.ts'));
+app.use('/activity', require('./server/apis/activity.ts'));
+
 require('./server/apis/rsa.ts').registerApi(app);
-require('./server/apis/activity.ts').registerApi(app);
 
 app.listen(3000, () => console.log('app listening on port 3000'));
