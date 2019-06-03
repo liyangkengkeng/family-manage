@@ -8,5 +8,6 @@ export default [
     path: '/activity',
     name: 'activity',
     component: Activity,
+    meta: {requireAuth: true}, //需要登录才能看到的页面
   }
 ]

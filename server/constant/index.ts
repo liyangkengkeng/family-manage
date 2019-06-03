@@ -1,8 +1,7 @@
-const mongodbData = {
+module.exports = {
   mongoURL: 'mongodb://localhost:27017/familyManage',
-  collection: 'users',
   databaseName: 'familyManage',
+  userCollection: 'users',
   sessionCollection: 'mySessions',
+  activityCollection: 'activities',
 }
-
-module.exports = mongodbData;

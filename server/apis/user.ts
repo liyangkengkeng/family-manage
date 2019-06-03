@@ -1,28 +1,33 @@
-const UsersModel = require('../schema.ts');
+const { UsersModel } = require('../schema.ts')
 const URLUtil = require('url'); //处理url的模块
+const { decrypt } = require('../rsa/index.ts');
 
 module.exports = {
   registerApi: app => {
     app.get('/api/users/find', (req, res) => {
-      let userInfo = URLUtil.parse(req.url, true).query || {};
+      const userInfo = URLUtil.parse(req.url, true).query || {};
+      const originPassword = decrypt(userInfo.password);
+      userInfo.password = originPassword;
       UsersModel.find(userInfo, (err, doc) => {
         if (err) {
-          console.log(err);
+          res.json({ code: -1, message: '登录失败' });
         } else if (doc) {
           if ((doc || []).length > 0) {
             req.session.user = doc[0].name;
+            //res.json({ code: 0, message: '登录成功', userList: doc });
+            res.json({ code: 0, message: '登录成功'});
+            return;
           }
-          res.send(doc);
+          res.json({ code: -2, message: '账号或密码错误' });
         }
       });
     });
 
     //退出登录的时候，需要清除session
     app.get('/api/users/logout', (req, res) => {
-      req.session.user = null;
+      req.session.destroy();
       res.json({ code: 0 });
     });
-
     //注册
     app.post('/api/users/register', (req, res) => {
       let data = '';  //心累，找了很久，axios.post发出来的请求，express这边获取参数的方法，
@@ -41,6 +46,8 @@ module.exports = {
               res.json({ code: -1, message: '账号存在' });
             } else {
               //注册，保存到数据库
+              const originPassword = decrypt(userInfo.password);
+              userInfo.password = originPassword;
               UsersModel.create(userInfo, (err, doc) => {
                 if (err) {
                   console.log(err);
@@ -52,8 +59,6 @@ module.exports = {
           }
         });        
       })
-      
-
     });    
   },
 };
