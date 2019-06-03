@@ -12,6 +12,6 @@ export default new Router({
     ...login,
     ...home,
     ...activity,
-    { path: '/', redirect: '/login' },
+    { path: '/', redirect: '/activity' },
   ]
 });

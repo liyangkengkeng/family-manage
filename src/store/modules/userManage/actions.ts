@@ -23,4 +23,13 @@ export default {
         return '';
       })
   },
+  'CHECK_LOGIN':({ commit, state }: ActionContext<any,any>) => {
+    return $http.checkLogin()
+      .then(({data}) => {
+        return data || {};
+      })
+      .catch(({data}) => {
+        throw data || {};
+      })
+  },
 }

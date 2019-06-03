@@ -8,6 +8,15 @@ Vue.config.productionTip = false;
 
 router.beforeEach((to,from,next) => {
   if(to.meta.requireAuth) {
+    store.dispatch('userManage/CHECK_LOGIN')
+    .then((data) => {
+      next();
+    })
+    .catch(data => {
+      if(data.code === 401) {
+        router.push('/login');
+      }
+    })    
   }
   next();
 });

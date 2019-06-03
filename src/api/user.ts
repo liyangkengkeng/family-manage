@@ -16,5 +16,9 @@ export default {
 
   getPublicKey() {
     return apiCreator().get('/users/generateRSAKey')
+  },
+
+  checkLogin() {
+    return apiCreator().get('/users/check')
   }
 }
