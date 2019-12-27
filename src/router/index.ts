@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import login from './login';
 import home from "./home";
+import activity from "./activity";
 Vue.use(Router);
 
 export default new Router({
@@ -10,6 +11,7 @@ export default new Router({
   routes: [
     ...login,
     ...home,
-    { path: '/', redirect: '/login' },
+    ...activity,
+    { path: '/', redirect: '/activity' },
   ]
 });
